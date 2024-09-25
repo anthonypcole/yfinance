@@ -82,7 +82,7 @@ class TickerBase:
 
     def _lazy_load_price_history(self):
         if self._price_history is None:
-            self._price_history = PriceHistory(self._data, self.ticker, self._get_ticker_tz(self.proxy, timeout=10, raise_errors=self.raise_errors))
+            self._price_history = PriceHistory(self._data, self.ticker, self._get_ticker_tz(self.proxy, timeout=10), raise_errors=self.raise_errors)
         return self._price_history
 
     def _get_ticker_tz(self, proxy, timeout):
@@ -576,7 +576,7 @@ class TickerBase:
         return self._news
 
     @utils.log_indent_decorator
-    def get_earnings_dates(self, limit=12, proxy=None, raise_errors=False) -> Optional[pd.DataFrame]:
+    def get_earnings_dates(self, limit=12, proxy=None) -> Optional[pd.DataFrame]:
         """
         Get earning dates (future and historic)
         :param limit: max amount of upcoming and recent earnings dates to return.

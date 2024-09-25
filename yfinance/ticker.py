@@ -30,8 +30,8 @@ from .const import _BASE_URL_
 
 
 class Ticker(TickerBase):
-    def __init__(self, ticker, session=None, proxy=None):
-        super(Ticker, self).__init__(ticker, session=session, proxy=proxy)
+    def __init__(self, ticker, session=None, proxy=None, raise_errors=False):
+        super(Ticker, self).__init__(ticker, session=session, proxy=proxy, raise_errors=raise_errors)
         self._expirations = {}
         self._underlying  = {}
 
