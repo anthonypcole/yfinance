@@ -14,10 +14,11 @@ _QUOTE_SUMMARY_URL_ = f"{_BASE_URL_}/v10/finance/quoteSummary/"
 class Holders:
     _SCRAPE_URL_ = 'https://finance.yahoo.com/quote'
 
-    def __init__(self, data: YfData, symbol: str, proxy=None):
+    def __init__(self, data: YfData, symbol: str, proxy=None, raise_errors=False):
         self._data = data
         self._symbol = symbol
         self.proxy = proxy
+        self.raise_errors = raise_errors
 
         self._major = None
         self._major_direct_holders = None
@@ -90,6 +91,9 @@ class Holders:
             self._insider_transactions = pd.DataFrame()
             self._insider_purchases = pd.DataFrame()
             self._insider_roster = pd.DataFrame()
+
+            if self.raise_errors:
+                raise
 
             return
 

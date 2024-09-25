@@ -10,10 +10,11 @@ from yfinance.exceptions import YFException
 
 class Analysis:
 
-    def __init__(self, data: YfData, symbol: str, proxy=None):
+    def __init__(self, data: YfData, symbol: str, proxy=None, raise_errors=False):
         self._data = data
         self._symbol = symbol
         self.proxy = proxy
+        self.raise_errors = raise_errors
 
         # In quoteSummary the 'earningsTrend' module contains most of the data below.
         # The format of data is not optimal so each function will process it's part of the data.

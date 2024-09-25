@@ -43,9 +43,10 @@ from .const import _BASE_URL_, _ROOT_URL_
 
 
 class TickerBase:
-    def __init__(self, ticker, session=None, proxy=None):
+    def __init__(self, ticker, session=None, proxy=None, raise_errors=False):
         self.ticker = ticker.upper()
         self.proxy = proxy
+        self.raise_errors=raise_errors
         self.session = session
         self._tz = None
 
@@ -66,10 +67,10 @@ class TickerBase:
 
         # self._price_history = PriceHistory(self._data, self.ticker)
         self._price_history = None  # lazy-load
-        self._analysis = Analysis(self._data, self.ticker)
-        self._holders = Holders(self._data, self.ticker)
-        self._quote = Quote(self._data, self.ticker)
-        self._fundamentals = Fundamentals(self._data, self.ticker)
+        self._analysis = Analysis(self._data, self.ticker, raise_errors=self.raise_errors)
+        self._holders = Holders(self._data, self.ticker, raise_errors=self.raise_errors)
+        self._quote = Quote(self._data, self.ticker, raise_errors=self.raise_errors)
+        self._fundamentals = Fundamentals(self._data, self.ticker, raise_errors=self.raise_errors)
 
         self._fast_info = None
 
@@ -81,7 +82,7 @@ class TickerBase:
 
     def _lazy_load_price_history(self):
         if self._price_history is None:
-            self._price_history = PriceHistory(self._data, self.ticker, self._get_ticker_tz(self.proxy, timeout=10))
+            self._price_history = PriceHistory(self._data, self.ticker, self._get_ticker_tz(self.proxy, timeout=10, raise_errors=self.raise_errors))
         return self._price_history
 
     def _get_ticker_tz(self, proxy, timeout):
@@ -124,6 +125,9 @@ class TickerBase:
             data = data.json()
         except Exception as e:
             logger.error(f"Failed to get ticker '{self.ticker}' reason: {e}")
+
+            if self.raise_errors:
+                raise
             return None
         else:
             error = data.get('chart', {}).get('error', None)
@@ -139,6 +143,10 @@ class TickerBase:
                     logger.debug("-------------")
                     logger.debug(f" {data}")
                     logger.debug("-------------")
+
+                    if self.raise_errors:
+                        raise
+
         return None
 
     def get_recommendations(self, proxy=None, as_dict=False):
@@ -229,7 +237,7 @@ class TickerBase:
 
     def get_fast_info(self, proxy=None):
         if self._fast_info is None:
-            self._fast_info = FastInfo(self, proxy=proxy)
+            self._fast_info = FastInfo(self, proxy=proxy, raise_errors=self.raise_errors)
         return self._fast_info
 
     @property
@@ -472,7 +480,11 @@ class TickerBase:
             json_data = self._data.cache_get(url=shares_url, proxy=proxy)
             json_data = json_data.json()
         except (_json.JSONDecodeError, requests.exceptions.RequestException):
+
             logger.error(f"{self.ticker}: Yahoo web request for share count failed")
+            
+            if self.raise_errors:
+                raise
             return None
         try:
             fail = json_data["finance"]["error"]["code"] == "Bad Request"
@@ -480,6 +492,9 @@ class TickerBase:
             fail = False
         if fail:
             logger.error(f"{self.ticker}: Yahoo web request for share count failed")
+
+            if self.raise_errors:
+                raise
             return None
 
         shares_data = json_data["timeseries"]["result"]
@@ -489,6 +504,9 @@ class TickerBase:
             df = pd.Series(shares_data[0]["shares_out"], index=pd.to_datetime(shares_data[0]["timestamp"], unit="s"))
         except Exception as e:
             logger.error(f"{self.ticker}: Failed to parse shares count data: {e}")
+
+            if self.raise_errors:
+                raise
             return None
 
         df.index = df.index.tz_localize(tz)
@@ -550,12 +568,15 @@ class TickerBase:
             logger.error(f"{self.ticker}: Failed to retrieve the news and received faulty response instead.")
             data = {}
 
+            if self.raise_errors:
+                raise
+
         # parse news
         self._news = data.get("news", [])
         return self._news
 
     @utils.log_indent_decorator
-    def get_earnings_dates(self, limit=12, proxy=None) -> Optional[pd.DataFrame]:
+    def get_earnings_dates(self, limit=12, proxy=None, raise_errors=False) -> Optional[pd.DataFrame]:
         """
         Get earning dates (future and historic)
         :param limit: max amount of upcoming and recent earnings dates to return.

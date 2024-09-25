@@ -11,11 +11,12 @@ from yfinance.const import _BASE_URL_, _PRICE_COLNAMES_
 from yfinance.exceptions import YFInvalidPeriodError, YFPricesMissingError, YFTzMissingError
 
 class PriceHistory:
-    def __init__(self, data, ticker, tz, session=None, proxy=None):
+    def __init__(self, data, ticker, tz, session=None, proxy=None, raise_errors=False):
         self._data = data
         self.ticker = ticker.upper()
         self.tz = tz
         self.proxy = proxy
+        self.raise_errors = raise_errors
         self.session = session
 
         self._history = None
@@ -29,8 +30,7 @@ class PriceHistory:
     def history(self, period="1mo", interval="1d",
                 start=None, end=None, prepost=False, actions=True,
                 auto_adjust=True, back_adjust=False, repair=False, keepna=False,
-                proxy=None, rounding=False, timeout=10,
-                raise_errors=False) -> pd.DataFrame:
+                proxy=None, rounding=False, timeout=10) -> pd.DataFrame:
         """
         :Parameters:
             period : str
@@ -69,8 +69,6 @@ class PriceHistory:
                 If not None stops waiting for a response after given number of
                 seconds. (Can also be a fraction of a second e.g. 0.01)
                 Default is 10 seconds.
-            raise_errors: bool
-                If True, then raise errors as Exceptions instead of logging.
         """
         logger = utils.get_yf_logger()
         proxy = proxy or self.proxy
@@ -90,7 +88,7 @@ class PriceHistory:
                     err_msg = str(_exception)
                     shared._DFS[self.ticker] = utils.empty_df()
                     shared._ERRORS[self.ticker] = err_msg.split(': ', 1)[1]
-                    if raise_errors:
+                    if self.raise_errors:
                         raise _exception
                     else:
                         logger.error(err_msg)
@@ -116,7 +114,7 @@ class PriceHistory:
                 err_msg = str(_exception)
                 shared._DFS[self.ticker] = utils.empty_df()
                 shared._ERRORS[self.ticker] = err_msg.split(': ', 1)[1]
-                if raise_errors:
+                if self.raise_errors:
                     raise _exception
                 else:
                     logger.error(err_msg)
@@ -184,7 +182,7 @@ class PriceHistory:
 
             data = data.json()
         except Exception:
-            if raise_errors:
+            if self.raise_errors:
                 raise
 
         # Store the meta data that gets retrieved simultaneously
@@ -238,7 +236,7 @@ class PriceHistory:
             err_msg = str(_exception)
             shared._DFS[self.ticker] = utils.empty_df()
             shared._ERRORS[self.ticker] = err_msg.split(': ', 1)[1]
-            if raise_errors:
+            if self.raise_errors:
                 raise _exception
             else:
                 logger.error(err_msg)

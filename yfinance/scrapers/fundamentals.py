@@ -10,10 +10,11 @@ from yfinance.exceptions import YFException, YFNotImplementedError
 
 class Fundamentals:
 
-    def __init__(self, data: YfData, symbol: str, proxy=None):
+    def __init__(self, data: YfData, symbol: str, proxy=None, raise_errors=False):
         self._data = data
         self._symbol = symbol
         self.proxy = proxy
+        self.raise_errors = raise_errors
 
         self._earnings = None
         self._financials = None
@@ -22,7 +23,7 @@ class Fundamentals:
         self._financials_data = None
         self._fin_data_quote = None
         self._basics_already_scraped = False
-        self._financials = Financials(data, symbol)
+        self._financials = Financials(data, symbol, raise_errors)
 
     @property
     def financials(self) -> "Financials":
@@ -41,12 +42,13 @@ class Fundamentals:
 
 
 class Financials:
-    def __init__(self, data: YfData, symbol: str):
+    def __init__(self, data: YfData, symbol: str, raise_errors=False):
         self._data = data
         self._symbol = symbol
         self._income_time_series = {}
         self._balance_sheet_time_series = {}
         self._cash_flow_time_series = {}
+        self.raise_errors = raise_errors
 
     def get_income_time_series(self, freq="yearly", proxy=None) -> pd.DataFrame:
         res = self._income_time_series
@@ -87,6 +89,9 @@ class Financials:
                 return statement
         except YFException as e:
             utils.get_yf_logger().error(f"{self._symbol}: Failed to create {name} financials table for reason: {e}")
+
+            if self.raise_errors:
+                raise
         return pd.DataFrame()
 
     def _create_financials_table(self, name, timescale, proxy):

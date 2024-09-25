@@ -32,7 +32,41 @@ fundamentals_keys = {
                    "OtherGandA", "InsuranceAndClaims", "RentAndLandingFees", "SalariesAndWages", "GrossProfit",
                    "CostOfRevenue", "TotalRevenue", "ExciseTaxes", "OperatingRevenue", "LossAdjustmentExpense",
                    "NetPolicyholderBenefitsAndClaims", "PolicyholderBenefitsGross", "PolicyholderBenefitsCeded",
-                   "OccupancyAndEquipment", "ProfessionalExpenseAndContractServicesExpense", "OtherNonInterestExpense"],
+                   "OccupancyAndEquipment", "ProfessionalExpenseAndContractServicesExpense", "OtherNonInterestExpense",
+                    "CreditCard",                             # New
+                    "CreditLossesProvision",                  # New
+                    "CostOfGoodsAndServices",                 # New
+                    "DividendIncome",                         # New
+                    "FinancingRevenue",                       # New
+                    "ForeignExchangeTradingGains",            # New
+                    "GainonSaleofInvestmentProperty",         # New
+                    "GainonSaleofLoans",                      # New
+                    "IncomeLossfromContOps",                  # New
+                    "IncomeLossInclMI",                       # New
+                    "InterestExpenseForDeposit",              # New
+                    "InterestExpenseForFederalFundsSoldAndSecuritiesPurchaseUnderAgreementsToResell", # New
+                    "InterestExpenseForLongTermDebtAndCapitalSecurities",  # New
+                    "InterestExpenseForShortTermDebt",        # New
+                    "InterestIncomeAfterProvisionForLoanLoss",# New
+                    "InterestIncomeFromDeposits",             # New
+                    "InterestIncomeFromFederalFundsSoldAndSecuritiesPurchaseUnderAgreementsToResell", # New
+                    "InterestIncomeFromLeases",               # New
+                    "InterestIncomeFromLoans",                # New
+                    "InvestmentBankingProfit",                # New
+                    "LossonExtinguishmentofDebt",             # New
+                    "NetIncomeAvailtoCommon",                 # New
+                    "NetOccupancyExpense",                    # New
+                    "OtherCustomerServices",                  # New
+                    "OtherInterestExpense",                   # New
+                    "OtherInterestIncome",                    # New
+                    "PaymentsForLoans",                       # New
+                    "ProceedsFromLoans",                      # New
+                    "SecuritiesActivities",                   # New
+                    "ServiceChargeOnDepositorAccounts",       # New
+                    "TotalMoneyMarketInvestments",            # New
+                    "TradingGainLoss",                        # New
+                    "TrustFeesbyCommissions"                  # New
+                   ],
     'balance-sheet': ["TreasurySharesNumber", "PreferredSharesNumber", "OrdinarySharesNumber", "ShareIssued", "NetDebt",
                       "TotalDebt", "TangibleBookValue", "InvestedCapital", "WorkingCapital", "NetTangibleAssets",
                       "CapitalLeaseObligations", "CommonStockEquity", "PreferredStockEquity", "TotalCapitalization",
@@ -77,7 +111,39 @@ fundamentals_keys = {
                       "LoansReceivable", "AccountsReceivable", "AllowanceForDoubtfulAccountsReceivable",
                       "GrossAccountsReceivable", "CashCashEquivalentsAndShortTermInvestments",
                       "OtherShortTermInvestments", "CashAndCashEquivalents", "CashEquivalents", "CashFinancial",
-                      "CashCashEquivalentsAndFederalFundsSold"],
+                      "CashCashEquivalentsAndFederalFundsSold",
+                        "AdvanceFromFederalHomeLoanBanks",            # Added by JB 2024--9-5
+                        "BankOwnedLifeInsurance",                      
+                        "CashAndDueFromBanks",                      
+                        "CommercialLoan",                              
+                        "ConsumerLoan",                               
+                        "CustomerAcceptances",                        
+                        "CustomerAccounts",                           
+                        "DepositsbyBank",                             
+                        "FederalFundsPurchased",                       
+                        "FederalFundsPurchasedAndSecuritiesSoldUnderAgreementToRepurchase",  
+                        "FederalFundsSold",                           
+                        "FederalFundsSoldAndSecuritiesPurchaseUnderAgreementsToResell",     
+                        "FederalHomeLoanBankStock",                    
+                        "ForeclosedAssets",                            
+                        "GrossLoan",                                   
+                        "GrossNotesReceivable",                       
+                        "InterestBearingDepositsAssets",              
+                        "InterestBearingDepositsLiabilities",         
+                        "LoansHeldForSale",                          
+                        "MoneyMarketInvestments",                     
+                        "MortgageLoan",                               
+                        "NetLoan",                                    
+                        "NonInterestBearingDeposits",                 
+                        "PolicyholderFunds",                           
+                        "PolicyLoans",                              
+                        "SecuritySoldNotYetRepurchased",             
+                        "SeparateAccountAssets",                       
+                        "SeparateAccountBusiness",                    
+                        "UnpaidLossAndLossReserve",                   
+                        "UnearnedIncome",                            
+                        "UnearnedPremiums"                           
+                      ],
     'cash-flow': ["ForeignSales", "DomesticSales", "AdjustedGeographySegmentData", "FreeCashFlow",
                   "RepurchaseOfCapitalStock", "RepaymentOfDebt", "IssuanceOfDebt", "IssuanceOfCapitalStock",
                   "CapitalExpenditure", "InterestPaidSupplementalData", "IncomeTaxPaidSupplementalData",
@@ -116,7 +182,11 @@ fundamentals_keys = {
                   "InterestPaidDirect", "DividendsReceivedDirect", "DividendsPaidDirect", "ClassesofCashPayments",
                   "OtherCashPaymentsfromOperatingActivities", "PaymentsonBehalfofEmployees",
                   "PaymentstoSuppliersforGoodsandServices", "ClassesofCashReceiptsfromOperatingActivities",
-                  "OtherCashReceiptsfromOperatingActivities", "ReceiptsfromGovernmentGrants", "ReceiptsfromCustomers"]}
+                  "OtherCashReceiptsfromOperatingActivities", "ReceiptsfromGovernmentGrants", "ReceiptsfromCustomers",
+                  "ChangeInFederalFundsAndSecuritiesSoldForRepurchase",  # newly added JB 2024-9-5 
+                  "NetProceedsPaymentForLoan",                           # newly added JB 2024-9-5             
+                  "ProvisionForLoanLeaseAndOtherLosses"                  # newly added JB 2024-9-5                
+                  ]}
 
 _PRICE_COLNAMES_ = ['Open', 'High', 'Low', 'Close', 'Adj Close']
 

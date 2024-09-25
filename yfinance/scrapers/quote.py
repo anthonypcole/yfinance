@@ -26,9 +26,10 @@ _QUOTE_SUMMARY_URL_ = f"{_BASE_URL_}/v10/finance/quoteSummary"
 class FastInfo:
     # Contain small subset of info[] items that can be fetched faster elsewhere.
     # Imitates a dict.
-    def __init__(self, tickerBaseObject, proxy=None):
+    def __init__(self, tickerBaseObject, proxy=None, raise_errors=False):
         self._tkr = tickerBaseObject
         self.proxy = proxy
+        self.raise_errors = raise_errors
 
         self._prices_1y = None
         self._prices_1wk_1h_prepost = None
@@ -485,10 +486,11 @@ class FastInfo:
 
 class Quote:
 
-    def __init__(self, data: YfData, symbol: str, proxy=None):
+    def __init__(self, data: YfData, symbol: str, proxy=None, raise_errors=False):
         self._data = data
         self._symbol = symbol
         self.proxy = proxy
+        self.raise_errors = raise_errors
 
         self._info = None
         self._retired_info = None
@@ -587,6 +589,9 @@ class Quote:
             result = self._data.get_raw_json(_QUOTE_SUMMARY_URL_ + f"/{self._symbol}", user_agent_headers=self._data.user_agent_headers, params=params_dict, proxy=proxy)
         except requests.exceptions.HTTPError as e:
             utils.get_yf_logger().error(str(e))
+
+            if self.raise_errors:
+                raise
             return None
         return result
 
